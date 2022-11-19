@@ -8,7 +8,7 @@ const textBorderStyles = {
 
 export default function HomePage() {
   return (
-    <div className='w-full flex flex-col'>
+    <div className='pt-20 w-full flex flex-col'>
       <div className="top bg-yellow bg-banner bg-repeat-x bg-70% bg-center h-[60px] flex items-center">
       </div>
       <div className="center relative">

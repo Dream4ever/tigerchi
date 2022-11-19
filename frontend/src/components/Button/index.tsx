@@ -1,3 +1,5 @@
+import styles from './index.module.less'
+
 import YellowBg from '@/assets/images/btn-bg-yellow.png'
 import GrayBg from '@/assets/images/btn-bg-gray.png'
 import Dropdown from '@/assets/icons/dropdown.png'
@@ -6,11 +8,13 @@ export default function NavBar({
   text,
   btnBg = 'yellow',
   withDropdown = false,
+  isConnect = false,
   click,
 }: {
   text: string
   btnBg?: 'yellow' | 'gray'
   withDropdown?: Boolean
+  isConnect?: Boolean
   click?: Function
 }) {
   const handle = () => {
@@ -36,7 +40,7 @@ export default function NavBar({
 
   return (
     <div
-      className='relative flex justify-center items-center cursor-pointer'
+      className='relative flex flex-col justify-center items-center cursor-pointer'
       style={sizeStyles}
       onClick={handle}
     >
@@ -56,6 +60,11 @@ export default function NavBar({
           />
         )}
       </div>
+      {isConnect && (
+        <div className={styles.dropdown}>
+          <span className={styles.menu} style={sizeStyles}>Disconnect</span>
+        </div>
+      )}
     </div>
   )
 }

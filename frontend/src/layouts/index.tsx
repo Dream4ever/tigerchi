@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { Outlet, history } from 'umi'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Outlet, history } from 'umi'
 
 import Button from '@/components/Button/index'
 
@@ -16,8 +15,8 @@ export default function Layout() {
   const [userName, setUserName] = useState<string>('')
   const [isConnect, setIsConnect] = useState<boolean>(false)
 
-  const defaultClassName = 'text-white'
-  const activeClassName = 'text-yellow'
+  const defaultClassName = 'py-4 text-white'
+  const activeClassName = 'py-4 border-b border-yellow text-yellow'
 
   const socials = [
     {
@@ -53,7 +52,7 @@ export default function Layout() {
   return (
     <div className='w-full min-h-screen overflow-x-hidden'>
       {/* 顶部导航栏 */}
-      <div className='navs px-12 py-4 flex justify-between items-center'>
+      <div className='navs px-12 h-20 flex justify-between items-center'>
         {/* 左侧 logo 及页面链接 */}
         <div className="left flex items-center">
           <img className='cursor-pointer' src={Logo} onClick={toHome} width="145" />
@@ -63,13 +62,13 @@ export default function Layout() {
               to="/eth"
               className={({ isActive }) =>
                 isActive ? activeClassName : defaultClassName
-            }
+              }
             >ETH</NavLink>
             <NavLink
               to="/mint"
               className={({ isActive }) =>
                 isActive ? activeClassName : defaultClassName
-            }
+              }
             >MINT</NavLink>
           </div>
         </div>

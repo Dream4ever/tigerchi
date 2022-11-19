@@ -3,7 +3,10 @@
   "rules": {
     "comma-dangle": [
       "error",
-      "always-multiline",
+      "always-multiline"
     ],
-  },
+    // ESLint 官方建议不要在 ESLint 中格式化括号
+    "brace-style": "off",
+    "@typescript-eslint/brace-style": "off"
+  }
 }

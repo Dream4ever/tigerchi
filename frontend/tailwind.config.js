@@ -7,8 +7,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        yellowdeep: '#FFA100',
-        yellowlight: '#FFA200',
+        yellow: '#FFA100',
       },
       backgroundImage: {
         banner: 'url("@/assets/images/banner.png")',

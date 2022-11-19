@@ -94,8 +94,8 @@ export default function Layout() {
       <Outlet />
       {/* 底栏 */}
       <div className="bottom bg-yellow bg-banner bg-repeat-x bg-70% bg-center h-[60px] flex items-center"></div>
-      <div className="footer flex flex-col items-center">
-        <img className='mt-20 w-[136px]' src={Logo2} alt="" />
+      <div className="footer pt-20 bg-black flex flex-col items-center">
+        <img className='w-[136px]' src={Logo2} alt="" />
         <span className='mt-4 font-[600] text-[36px] text-white'>Tiger Chi</span>
         <span className='mt-2 font-[500] text-[14px] text-white'>© 2022 TigerChi</span>
         <div className='mt-[60px] flex items-center gap-x-3'>

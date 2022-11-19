@@ -27,7 +27,7 @@ export default function MintPage() {
         <div className='mt-20 text-center font-[500] text-[24px] text-yellow'>Mint is LIVE now!</div>
         <div className='mt-6 flex justify-between items-center'>
           <img className='mint-avatar-left w-[250px]' src={MintAvatarLeft} alt="" />
-          <div className='mint-main-window w-[580px] h-[430px] bg-[#1f1f1f] rounded-2xl p-8 flex flex-col items-center'>
+          <div className='mint-main-window w-[580px] bg-[#1f1f1f] rounded-2xl p-8 flex flex-col items-center'>
             <div className='bg-yellow rounded-2xl w-full h-[212px] px-12 flex justify-between items-center'>
               <div className="left w-40 flex flex-col items-center">
                 <span className='font-[500] text-[56px]'>235</span>
@@ -47,7 +47,7 @@ export default function MintPage() {
             {isLoggedIn
               ? (
                 <div className='mt-6 mb-1 w-60'>
-                  <div className="w-full py-3 flex justify-between items-center">
+                  <div className="w-full py-3 border-b border-[#444] flex justify-between items-center">
                     <span className='w-6 h-6 rounded bg-yellow flex justify-center items-center text-[26px]'>-</span>
                     <span className='font-[500] text-[18px] text-white'>{mintCount}</span>
                     <span className='w-6 h-6 rounded bg-yellow flex justify-center items-center text-[26px]'>+</span>

@@ -52,12 +52,12 @@ export default function Layout() {
   return (
     <div className='w-full min-h-screen overflow-x-hidden'>
       {/* 顶部导航栏 */}
-      <div className='navs px-12 h-20 flex justify-between items-center'>
+      <div className='navs fixed w-full bg-black z-50 px-12 h-20 flex justify-between items-center'>
         {/* 左侧 logo 及页面链接 */}
         <div className="left flex items-center">
           <img className='cursor-pointer' src={Logo} onClick={toHome} width="145" />
           <div className="seperator ml-8 mr-10 w-0.5 h-6 bg-white/25"></div>
-          <div className="links flex items-center gap-x-3">
+          <div className="links flex items-center gap-x-10">
             <NavLink
               to="/eth"
               className={({ isActive }) =>

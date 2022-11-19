@@ -17,20 +17,43 @@ export default function NavBar({
     click?.()
   }
 
+  const sizeStyles = {
+    width: '178px',
+    height: '48px',
+  }
+
+  const textStyles = {
+    zIndex: 20,
+    fontWeight: 500,
+    color: btnBg === 'yellow' ? '#000' : '#fff',
+  }
+
+  const iconStyles = {
+    zIndex: 20,
+    marginLeft: '6px',
+    width: '8px',
+  }
+
   return (
     <div
-      className='relative flex justify-center items-center w-[178px] h-[48px] cursor-pointer'
+      className='relative flex justify-center items-center cursor-pointer'
+      style={sizeStyles}
       onClick={handle}
     >
       <img
-        className='absolute w-full h-full'
+        className='absolute top-0 left-0'
+        style={sizeStyles}
         src={btnBg === 'yellow' ? YellowBg : GrayBg}
         alt="btn-bg"
       />
-      <div className='z-10 flex items-center'>
-        <span className='font-[500]'>{text}</span>
+      <div className='flex items-center'>
+        <span style={textStyles}>{text}</span>
         {withDropdown && (
-          <img className='ml-1.5 w-2' src={Dropdown} alt="" />
+          <img
+            style={iconStyles}
+            src={Dropdown}
+            alt="dropdown"
+          />
         )}
       </div>
     </div>

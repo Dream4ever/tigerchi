@@ -93,6 +93,7 @@ export default function Layout() {
       </div>
       <Outlet />
       {/* 底栏 */}
+      <div className="bottom bg-yellow bg-banner bg-repeat-x bg-70% bg-center h-[60px] flex items-center"></div>
       <div className="footer flex flex-col items-center">
         <img className='mt-20 w-[136px]' src={Logo2} alt="" />
         <span className='mt-4 font-[600] text-[36px] text-white'>Tiger Chi</span>

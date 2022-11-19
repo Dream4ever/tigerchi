@@ -29,8 +29,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-      <div className="bottom bg-yellow bg-banner bg-repeat-x bg-70% bg-center h-[60px] flex items-center">
-      </div>
     </div>
   )
 }

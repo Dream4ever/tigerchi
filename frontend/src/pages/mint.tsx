@@ -17,7 +17,7 @@ export default function MintPage() {
   }
 
   return (
-    <div className='pt-20 w-full flex flex-col relative'>
+    <div className='pt-20 pb-40 w-full flex flex-col relative'>
       {isLoggedIn && (
         <img className='w-full absolute top-20 left-0 right-0 -z-10' src={MintBg} alt="" />
       )}
@@ -65,8 +65,6 @@ export default function MintPage() {
           </div>
           <img className='mint-avatar-right w-[250px]' src={MintAvatarRight} alt="" />
         </div>
-      </div>
-      <div className="bottom mt-40 bg-yellow bg-banner bg-repeat-x bg-70% bg-center h-[60px] flex items-center">
       </div>
     </div>
   )

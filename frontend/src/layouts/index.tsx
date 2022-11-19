@@ -30,7 +30,7 @@ export default function Layout() {
   ]
 
   return (
-    <div className='min-w-screen min-h-screen'>
+    <div className='w-full min-h-screen overflow-x-hidden'>
       {/* 顶部导航栏 */}
       <div className='navs px-12 py-4 flex justify-between items-center'>
         {/* 左侧 logo 及页面链接 */}

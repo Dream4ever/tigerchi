@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Link, Outlet } from 'umi'
+import { Outlet, history } from 'umi'
+import { NavLink } from 'react-router-dom'
 
 import Button from '@/components/Button/index'
 
@@ -13,6 +14,10 @@ import Twitter from '@/assets/icons/twitter.png'
 export default function Layout() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
   const [userName, setUserName] = useState<string>('')
+  const [isConnect, setIsConnect] = useState<boolean>(false)
+
+  const defaultClassName = 'text-white'
+  const activeClassName = 'text-yellow'
 
   const socials = [
     {
@@ -29,17 +34,43 @@ export default function Layout() {
     },
   ]
 
+  const toHome = () => {
+    history.push('/')
+  }
+
+  const login = () => {
+    if (!userName) {
+      setUserName('Samsara9527')
+      setIsLoggedIn(true)
+      setIsConnect(true)
+    } else {
+      setUserName('')
+      setIsLoggedIn(false)
+      setIsConnect(false)
+    }
+  }
+
   return (
     <div className='w-full min-h-screen overflow-x-hidden'>
       {/* 顶部导航栏 */}
       <div className='navs px-12 py-4 flex justify-between items-center'>
         {/* 左侧 logo 及页面链接 */}
         <div className="left flex items-center">
-          <img className='' src={Logo} width="145" />
+          <img className='cursor-pointer' src={Logo} onClick={toHome} width="145" />
           <div className="seperator ml-8 mr-10 w-0.5 h-6 bg-white/25"></div>
-          <div className="links text-white">
-            <Link to="/eth">ETH</Link>
-            <Link className='ml-10' to="/mint">MINT</Link>
+          <div className="links flex items-center gap-x-3">
+            <NavLink
+              to="/eth"
+              className={({ isActive }) =>
+                isActive ? activeClassName : defaultClassName
+            }
+            >ETH</NavLink>
+            <NavLink
+              to="/mint"
+              className={({ isActive }) =>
+                isActive ? activeClassName : defaultClassName
+            }
+            >MINT</NavLink>
           </div>
         </div>
         {/* 右侧钱包信息 */}
@@ -56,6 +87,7 @@ export default function Layout() {
           <Button
             text={isLoggedIn ? userName : 'Connect wallet'}
             withDropdown={true}
+            isConnect={isConnect}
             click={login}
           />
         </div>

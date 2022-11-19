@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { Link, Outlet } from 'umi'
 
+import Button from '@/components/Button/index'
+
 import Logo from '@/assets/images/logo-horizontal.png'
 import Logo2 from '@/assets/images/logo.png'
 import Coin from '@/assets/images/coin.png'
-import Connect from '@/assets/images/btn-bg-yellow.png'
-import Dropdown from '@/assets/icons/dropdown.png'
 import Discord from '@/assets/icons/discord.png'
 import Telegram from '@/assets/icons/telegram.png'
 import Twitter from '@/assets/icons/twitter.png'
@@ -45,7 +45,7 @@ export default function Layout() {
         {/* 右侧钱包信息 */}
         <div className='flex items-center'>
           {!isLoggedIn && (
-            <div className='flex items-center'>
+            <div className='flex items-center mr-12'>
               <img className='w-[30px] h-[30px]' src={Coin} />
               <div className="ml-2 flex flex-col text-white">
                 <span className='text-xs'>Balance:</span>
@@ -53,13 +53,11 @@ export default function Layout() {
               </div>
             </div>
           )}
-          <div className='ml-12 relative flex justify-center items-center w-[178px] h-[48px]'>
-            <img className='absolute w-full h-full' src={Connect} alt="" />
-            <div className='z-10 flex items-center'>
-              <span className='font-[500]'>{isLoggedIn ? userName : 'Connect wallet'}</span>
-              <img className='ml-1.5 w-2' src={Dropdown} alt="" />
-            </div>
-          </div>
+          <Button
+            text={isLoggedIn ? userName : 'Connect wallet'}
+            withDropdown={true}
+            click={login}
+          />
         </div>
       </div>
       <Outlet />

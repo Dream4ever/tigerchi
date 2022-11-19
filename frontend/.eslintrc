@@ -1,0 +1,9 @@
+{
+  "extends": "@antfu",
+  "rules": {
+    "comma-dangle": [
+      "error",
+      "always-multiline",
+    ],
+  },
+}

@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, Outlet, history } from 'umi'
+import { useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi'
+import { InjectedConnector } from 'wagmi/connectors/injected'
 
 import Button from '@/components/Button/index'
 
@@ -11,9 +13,27 @@ import Telegram from '@/assets/icons/telegram.png'
 import Twitter from '@/assets/icons/twitter.png'
 
 export default function Layout() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
-  const [userName, setUserName] = useState<string>('')
-  const [isConnect, setIsConnect] = useState<boolean>(false)
+  const { address = '', isConnected } = useAccount()
+  const { disconnect } = useDisconnect()
+  const [showDropdown, setShowDropdown] = useState<boolean>(false)
+
+  const { connect } = useConnect({
+    connector: new InjectedConnector(),
+  })
+
+  const doConnect = () => {
+    if (!address) {
+      // 未连接钱包时，让用户连接钱包
+      connect()
+    } else {
+      // 已连接钱包时，显示/隐藏下拉菜单
+      setShowDropdown(!showDropdown)
+    }
+  }
+
+  const maskAddr = (addr: string) => {
+    return `${addr.substring(0, 4)}****${addr.substring(addr.length - 4)}`
+  }
 
   const defaultClassName = 'py-4 text-white'
   const activeClassName = 'py-4 border-b border-yellow text-yellow'
@@ -35,18 +55,6 @@ export default function Layout() {
 
   const toHome = () => {
     history.push('/')
-  }
-
-  const login = () => {
-    if (!userName) {
-      setUserName('Samsara9527')
-      setIsLoggedIn(true)
-      setIsConnect(true)
-    } else {
-      setUserName('')
-      setIsLoggedIn(false)
-      setIsConnect(false)
-    }
   }
 
   return (
@@ -74,7 +82,7 @@ export default function Layout() {
         </div>
         {/* 右侧钱包信息 */}
         <div className='flex items-center'>
-          {!isLoggedIn && (
+          {isConnected && (
             <div className='flex items-center mr-12'>
               <img className='w-[30px] h-[30px]' src={Coin} />
               <div className="ml-2 flex flex-col text-white">
@@ -84,10 +92,11 @@ export default function Layout() {
             </div>
           )}
           <Button
-            text={isLoggedIn ? userName : 'Connect wallet'}
+            text={isConnected ? maskAddr(address) : 'Connect wallet'}
             withDropdown={true}
-            isConnect={isConnect}
-            click={login}
+            showDropdown={showDropdown}
+            click={doConnect}
+            callback={disconnect}
           />
         </div>
       </div>

@@ -8,17 +8,23 @@ export default function NavBar({
   text,
   btnBg = 'yellow',
   withDropdown = false,
-  isConnect = false,
+  showDropdown = false,
   click,
+  callback,
 }: {
   text: string
   btnBg?: 'yellow' | 'gray'
   withDropdown?: Boolean
-  isConnect?: Boolean
+  showDropdown?: Boolean
   click?: Function
+  callback: Function
 }) {
   const handle = () => {
     click?.()
+  }
+
+  const doDisconnect = () => {
+    callback()
   }
 
   const sizeStyles = {
@@ -60,9 +66,13 @@ export default function NavBar({
           />
         )}
       </div>
-      {isConnect && (
+      {showDropdown && (
         <div className={styles.dropdown}>
-          <span className={styles.menu} style={sizeStyles}>Disconnect</span>
+          <span
+            className={styles.menu}
+            style={sizeStyles}
+            onClick={doDisconnect}
+          >Disconnect</span>
         </div>
       )}
     </div>

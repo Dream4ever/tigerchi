@@ -1,28 +1,156 @@
 import { useEffect, useState } from 'react'
-import { useAccount, useConnect, useNetwork } from 'wagmi'
+import {
+  useAccount,
+  useConnect,
+  useNetwork,
+  useContractRead,
+  usePrepareContractWrite,
+  useContractWrite,
+} from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
+import { BigNumberish, ethers } from 'ethers'
+
+import axios from 'axios'
+import keccak256 from 'keccak256'
+import { MerkleTree } from 'merkletreejs'
+
+import { tigerChiAddr, tigerChiABI } from '@/static/contract'
 
 import MintAvatarLeft from '@/assets/images/mint-avatar-left.png'
 import MintAvatarRight from '@/assets/images/mint-avatar-right.png'
 import MintBg from '@/assets/images/mint-bg.png'
 
 export default function MintPage() {
-  const { isConnected } = useAccount()
+  const { address, isConnected } = useAccount()
   const { chain } = useNetwork()
+
+  const [publicPrice, setPublicPrice] = useState<string>('')
+  const [whitePrice, setWhitePrice] = useState<string>('')
+  const [mintNumber, setMintNumber] = useState<number>(0)
+
+  const [whiteList, setWhiteList] = useState<string[]>([])
+  const [proof, setProof] = useState<string[]>([
+    "0xa6e11421e6dcd9abb7a00504ae437cc45483829b6fe6d2b791432ea96759dfad",
+    "0x8cbb375fc64b9b80d7c5940fbfdb7b96fca9eab7f178f627bb69eab43445302f",
+  ])
+
   const [showDialog, setShowDialog] = useState<boolean>(false)
 
+  // 1. 读取 NFT 价格及 Mint 数量
+  // 1.1
+  const { data: public_Price } = useContractRead({
+    address: tigerChiAddr,
+    abi: tigerChiABI,
+    functionName: 'PUBLIC_PRICE',
+  })
+  if (public_Price && !publicPrice) {
+    setPublicPrice(ethers.utils.formatUnits(public_Price as BigNumberish))
+  }
+  // 1.2
+  const { data: white_Price } = useContractRead({
+    address: tigerChiAddr,
+    abi: tigerChiABI,
+    functionName: 'WHITE_PRICE',
+  })
+  if (white_Price && !whitePrice) {
+    setWhitePrice(ethers.utils.formatUnits(white_Price as BigNumberish))
+  }
+  // 1.3
+  const { data: mint_Number } = useContractRead({
+    address: tigerChiAddr,
+    abi: tigerChiABI,
+    functionName: 'getMintNumber',
+  })
+  if (mint_Number && !mintNumber) {
+    setMintNumber(Number(mint_Number))
+  }
+
   useEffect(() => {
+    // mintnumber 需及更新
+    getWhiteList()
   }, [])
+
+  useEffect(() => {
+    if (whiteList.length) {
+      makeProof(whiteList)
+    }
+  }, [whiteList])
 
   const { connect } = useConnect({
     connector: new InjectedConnector(),
   })
 
-  const doSth = () => {
+  // 2.1 公开 Mint
+  const { config: publicMintConfig } = usePrepareContractWrite({
+    address: tigerChiAddr,
+    abi: tigerChiABI,
+    functionName: 'publicMint',
+    // args: [
+    //   address,
+    //   proof,
+    // ],
+    overrides: {
+      value: ethers.utils.parseEther('0.015'),
+    },
+  })
+  const { data: publicData, write: publicWrite } = useContractWrite(publicMintConfig)
+
+  // 2.3 白名单 Mint
+  const { config: whiteListMintconfig } = usePrepareContractWrite({
+    address: tigerChiAddr,
+    abi: tigerChiABI,
+    functionName: 'whiteListMint',
+    args: [
+      address,
+      proof,
+    ],
+    overrides: {
+      value: ethers.utils.parseEther('0.01'),
+    },
+  })
+  const { data: whiteListData, write: whiteListWrite } = useContractWrite(whiteListMintconfig)
+
+  const makeProof = (whiteList: string[]) => {
+    const leafNodes = whiteList.map((item) => keccak256(item))
+    const tree = new MerkleTree(leafNodes, keccak256, { sortPairs: true })
+
+    const isInWhiteList = whiteList.findIndex(item => {
+      return address === item
+    })
+
+    if (isInWhiteList !== -1 && address) {
+      //生成地址对应的哈希证明
+      let leaf = keccak256(address)
+      setProof(tree.getHexProof(leaf))
+    }
+  }
+
+  const getWhiteList = async () => {
+    const result = await axios.get('https://gist.githubusercontent.com/Dream4ever/b638d7ee2a176e75c3b07c05767c5cc8/raw/7c1e1402649aef5f4a50624a8fc0ae3c6b0aac88/tigerchi_whitelist.json')
+    if (result.data && result.data.whitelistAddresses) {
+      setWhiteList(result.data.whitelistAddresses)
+    }
+  }
+
+  const doPublicMint = () => { }
+
+  const doSafeMint = () => {
     if (!isConnected) {
       connect()
-    } else if (chain?.id !== 1) {
-      setShowDialog(true)
+      return
+    }
+
+    publicWrite?.()
+  }
+
+  const doWhiteListMint = () => {
+    if (!isConnected) {
+      connect()
+      return
+    }
+
+    if (whiteList.length) {
+      whiteListWrite?.()
     }
   }
 
@@ -44,13 +172,14 @@ export default function MintPage() {
           <div className={`mint-main-window w-[580px] bg-[#1f1f1f] rounded-2xl p-8 flex flex-col items-center ${isConnected ? 'border-2 border-yellow' : ''}`}>
             <div className='bg-yellow rounded-2xl w-full h-[212px] px-12 flex justify-between items-center'>
               <div className="left w-40 flex flex-col items-center">
-                <span className='font-[500] text-[56px]'>235</span>
+                <span className='font-[500] text-[56px]'>{mintNumber}</span>
                 <span className='font-[500] text-[16px] opacity-50'>Total: 500</span>
               </div>
               <div className="center w-px h-[132px] bg-[#191919] opacity-30"></div>
               <div className="right w-40 flex flex-col">
                 <span className='mt-5 text-[14px]'>1 Football TigerChi costs</span>
-                <span className='mt-2 text-[14px]'>0.01ETH</span>
+                <span className='mt-2 text-[14px]'>Public Price: {publicPrice}ETH</span>
+                <span className='mt-2 text-[14px]'>Whitelist Price: {whitePrice}ETH</span>
                 <span className='mt-2 text-[14px]'>Excluding gas fee</span>
               </div>
             </div>
@@ -63,8 +192,16 @@ export default function MintPage() {
               )}
             <div
               className="connect-btn mt-4 w-60 h-11 bg-yellow rounded-lg flex justify-center items-center font-[500] text-[16px] cursor-pointer select-none"
-              onClick={doSth}
-            >{isConnected ? 'Mint' : 'Connect'}</div>
+              onClick={doPublicMint}
+            >{isConnected ? 'publicMint' : 'Connect'}</div>
+            <div
+              className="connect-btn mt-4 w-60 h-11 bg-yellow rounded-lg flex justify-center items-center font-[500] text-[16px] cursor-pointer select-none"
+              onClick={doSafeMint}
+            >{isConnected ? 'safeMint' : 'Connect'}</div>
+            <div
+              className="connect-btn mt-4 w-60 h-11 bg-yellow rounded-lg flex justify-center items-center font-[500] text-[16px] cursor-pointer select-none"
+              onClick={doWhiteListMint}
+            >{isConnected ? 'whiteListMint' : 'Connect'}</div>
             <div className="notice mt-8 px-12 text-[12px] text-white opacity-40">Please make sure you connect to the right Network Etheruem with the right wallet, Algorand Mint is not on this page. Please check Algorand page</div>
           </div>
           <img className='mint-avatar-right w-[250px]' src={MintAvatarRight} alt="" />

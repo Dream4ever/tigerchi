@@ -17,14 +17,14 @@ export default function NavBar({
   withDropdown?: Boolean
   showDropdown?: Boolean
   click?: Function
-  callback: Function
+  callback?: Function
 }) {
   const handle = () => {
     click?.()
   }
 
   const doDisconnect = () => {
-    callback()
+    callback?.()
   }
 
   const sizeStyles = {

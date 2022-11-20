@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NavLink, Outlet, history } from 'umi'
-import { useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi'
+import { useAccount, useBalance, useConnect, useDisconnect } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 
 import Button from '@/components/Button/index'
@@ -16,6 +16,15 @@ export default function Layout() {
   const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
+  const [balance, setBalance] = useState<string>('0.0')
+
+  useBalance({
+    chainId: 1,
+    address,
+    onSuccess(data) {
+      setBalance(data.formatted)
+    },
+  })
 
   const { connect } = useConnect({
     connector: new InjectedConnector(),
@@ -91,7 +100,7 @@ export default function Layout() {
               <img className='w-[30px] h-[30px]' src={Coin} />
               <div className="ml-2 flex flex-col text-white">
                 <span className='text-xs'>Balance:</span>
-                <span className='mt-0.5 font-[500]'>123456</span>
+                <span className='mt-0.5 font-[500]'>{balance}</span>
               </div>
             </div>
           )}

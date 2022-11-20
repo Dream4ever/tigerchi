@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { NavLink, Outlet, history } from 'umi'
 import { useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi'
 import { InjectedConnector } from 'wagmi/connectors/injected'
@@ -13,7 +13,7 @@ import Telegram from '@/assets/icons/telegram.png'
 import Twitter from '@/assets/icons/twitter.png'
 
 export default function Layout() {
-  const { address = '', isConnected } = useAccount()
+  const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
   const [showDropdown, setShowDropdown] = useState<boolean>(false)
 
@@ -31,7 +31,11 @@ export default function Layout() {
     }
   }
 
-  const maskAddr = (addr: string) => {
+  const maskAddr = (addr: string | undefined) => {
+    if (!addr) {
+      return ''
+    }
+
     return `${addr.substring(0, 4)}****${addr.substring(addr.length - 4)}`
   }
 
@@ -92,7 +96,7 @@ export default function Layout() {
             </div>
           )}
           <Button
-            text={isConnected ? maskAddr(address) : 'Connect wallet'}
+            text={address ? maskAddr(address) : 'Connect wallet'}
             withDropdown={true}
             showDropdown={showDropdown}
             click={doConnect}

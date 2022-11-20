@@ -9,7 +9,9 @@
     "start": "npm run dev"
   },
   "dependencies": {
-    "umi": "^4.0.30"
+    "ethers": "^5.7.2",
+    "umi": "^4.0.30",
+    "wagmi": "^0.8.5"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.30.1",

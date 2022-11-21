@@ -16,8 +16,8 @@ import { MerkleTree } from 'merkletreejs'
 
 import { tigerChiAddr, tigerChiABI } from '@/static/contract'
 
-import MintAvatarLeft from '@/assets/images/mint-avatar-left.png'
-import MintAvatarRight from '@/assets/images/mint-avatar-right.png'
+import MintAvatarLeft from '@/assets/images/animation1.gif'
+import MintAvatarRight from '@/assets/images/animation2.gif'
 import MintBg from '@/assets/images/mint-bg.png'
 
 export default function MintPage() {

@@ -30,6 +30,24 @@ export default function Layout() {
     connector: new InjectedConnector(),
   })
 
+  const defaultClassName = 'py-4 text-white'
+  const activeClassName = 'py-4 border-b border-yellow text-yellow'
+
+  const socials = [
+    {
+      url: 'https://discord.gg/TigerChiClub',
+      iconPath: Discord,
+    },
+    {
+      url: 'https://t.me/TigerChiClub',
+      iconPath: Telegram,
+    },
+    {
+      url: 'https://twitter.com/TigerChiClub',
+      iconPath: Twitter,
+    },
+  ]
+
   const doConnect = () => {
     if (!address) {
       // 未连接钱包时，让用户连接钱包
@@ -48,26 +66,12 @@ export default function Layout() {
     return `${addr.substring(0, 4)}****${addr.substring(addr.length - 4)}`
   }
 
-  const defaultClassName = 'py-4 text-white'
-  const activeClassName = 'py-4 border-b border-yellow text-yellow'
-
-  const socials = [
-    {
-      url: '',
-      iconPath: Discord,
-    },
-    {
-      url: '',
-      iconPath: Telegram,
-    },
-    {
-      url: '',
-      iconPath: Twitter,
-    },
-  ]
-
   const toHome = () => {
     history.push('/')
+  }
+
+  const navTo = (target: string): void => {
+    location.href = target
   }
 
   return (
@@ -127,6 +131,7 @@ export default function Layout() {
               src={item.iconPath}
               key={i}
               alt='icon'
+              onClick={() => navTo(item.url)}
             />
           ))}
         </div>

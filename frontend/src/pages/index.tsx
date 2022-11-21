@@ -6,6 +6,14 @@ const textBorderStyles = {
   textShadow: '-1px 0 #fff, 1px 0 #fff, 0 -1px #fff, 0 1px #fff',
 }
 
+const navTo = (target: string): void => {
+  if (target === 'discord') {
+    location.href = 'https://discord.gg/TigerChiClub'
+  } else if (target === 'opensea') {
+    location.href = 'https://opensea.io/'
+  }
+}
+
 export default function HomePage() {
   return (
     <div className='pt-20 w-full flex flex-col'>
@@ -20,11 +28,13 @@ export default function HomePage() {
           <div className='mt-12 font-[400] text-white text-[25px]'>Hope you have fun! 🙌</div>
           <div className='mt-12 flex items-center gap-x-3'>
             <Button
-              text='View Collectioins'
+              text='View Collections'
+              click={() => navTo('opensea')}
             />
             <Button
               text='Join Us'
               btnBg='gray'
+              click={() => navTo('discord')}
             />
           </div>
         </div>
